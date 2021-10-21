@@ -2,6 +2,7 @@ package com.movietest.presentation.ui.movie_list.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,8 +37,8 @@ fun MovieItem(movie: Movie) {
             .clickable {
             }
             .padding(10.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .background(Color.White)
+            .clip(RoundedCornerShape(10.dp)),
+        backgroundColor = if(isSystemInDarkTheme()) Color.White else Color.Gray
     ) {
         ConstraintLayout(
             modifier = Modifier
@@ -63,7 +64,7 @@ fun MovieItem(movie: Movie) {
                             start = parent.start,
                             end = parent.end,
                             verticalBias = 0.8f
-                            )
+                        )
                     }
             )
         }
@@ -87,6 +88,7 @@ private fun Title(title: String, modifier: Modifier) {
         fontSize = 16.sp,
         fontWeight = FontWeight.Bold,
         text = title,
-        modifier = modifier
+        modifier = modifier,
+        color = if(isSystemInDarkTheme()) Color.Gray else Color.White
     )
 }

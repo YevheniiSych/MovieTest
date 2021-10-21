@@ -1,5 +1,6 @@
 package com.movietest.presentation
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,7 +23,24 @@ class MainActivity : ComponentActivity(), KodeinAware {
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
             setContent {
-                MovieList(moviesFlow = movieViewModel.moviesFlow)
+                MovieList(
+                    moviesFlow = movieViewModel.moviesFlow,
+                    isInPortraitOrientation = isInPortraitOrientation()
+                )
+            }
+        }
+    }
+
+    private fun isInPortraitOrientation(): Boolean {
+        return when (resources.configuration.orientation) {
+            Configuration.ORIENTATION_LANDSCAPE -> {
+                false
+            }
+            Configuration.ORIENTATION_PORTRAIT -> {
+                true
+            }
+            else -> {
+                false
             }
         }
     }
