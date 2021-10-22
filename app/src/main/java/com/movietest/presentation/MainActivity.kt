@@ -2,12 +2,12 @@ package com.movietest.presentation
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.lifecycle.lifecycleScope
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.movietest.presentation.ui.movie_list.MovieViewModel
 import com.movietest.presentation.ui.movie_list.components.MovieList
-import kotlinx.coroutines.launch
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
@@ -19,14 +19,23 @@ class MainActivity : ComponentActivity(), KodeinAware {
 
     private val movieViewModel: MovieViewModel by instance()
 
+    private var connectionLiveData: ConnectionLiveData? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycleScope.launch {
-            setContent {
-                MovieList(
-                    moviesFlow = movieViewModel.moviesFlow,
-                    isInPortraitOrientation = isInPortraitOrientation()
-                )
+        connectionLiveData = ConnectionLiveData(this)
+        setContent {
+            val lazyMoviesItems = movieViewModel.moviesFlow.collectAsLazyPagingItems()
+            MovieList(
+                lazyMoviesItems = lazyMoviesItems,
+                isInPortraitOrientation = isInPortraitOrientation()
+            )
+            connectionLiveData?.observe(this) { isNetworkAvailable ->
+                if (isNetworkAvailable) {
+                    lazyMoviesItems.retry()
+                } else {
+                    Toast.makeText(this, "Network is unavailable", Toast.LENGTH_LONG).show()
+                }
             }
         }
     }

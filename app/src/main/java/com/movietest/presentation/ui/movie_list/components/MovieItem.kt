@@ -44,7 +44,7 @@ fun MovieItem(movie: Movie) {
             modifier = Modifier
                 .padding(10.dp)
         ) {
-            val (poster, title, rating) = createRefs()
+            val (poster, title) = createRefs()
             Poster(
                 imageUrl = IMAGE_URL + movie.posterPath,
                 modifier = Modifier

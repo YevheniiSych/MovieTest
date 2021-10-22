@@ -1,5 +1,6 @@
 package com.movietest.data.repository
 
+import android.util.Log
 import com.movietest.common.Constants
 import com.movietest.common.Constants.API_KEY
 import com.movietest.common.ResponseResult
@@ -28,7 +29,7 @@ class MovieRepositoryImpl : MovieRepository {
         return try {
             val resp = movieApi.getPopularMovies(API_KEY, language, page, region)
             ResponseResult.Success(resp)
-        } catch (ex: HttpException) {
+        } catch (ex: Exception) {
             ResponseResult.Failure(ex.message ?: "", ex.fillInStackTrace())
         }
     }
